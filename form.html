@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Form</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+
+        h2 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+
+        form {
+            max-width: 500px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            margin-top: 5px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+            box-sizing: border-box;
+        }
+
+        input:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 12px 20px;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .error {
+            color: #e74c3c;
+            font-size: 0.9em;
+            margin-top: 5px;
+            font-weight: 500;
+        }
+
+        .success {
+            color: #27ae60;
+            font-size: 0.95em;
+            margin-top: 10px;
+            font-weight: 500;
+            padding: 10px;
+            background: #d5f4e6;
+            border-radius: 5px;
+            border-left: 4px solid #27ae60;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            color: #3498db;
+            margin-top: 10px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>Contact Us</h2>
+    <form id="contactForm" onsubmit="submitForm(event)">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required>
+        <div class="error" id="nameError"></div>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+        <div class="error" id="emailError"></div>
+
+        <label for="phone">Phone:</label>
+        <input type="tel" id="phone" name="phone">
+        <div class="error" id="phoneError"></div>
+
+        <label for="address">Address:</label>
+        <textarea id="address" name="address" rows="3"></textarea>
+        <div class="error" id="addressError"></div>
+
+        <label for="message">Message:</label>
+        <textarea id="message" name="message" rows="5" required></textarea>
+        <div class="error" id="messageError"></div>
+
+        <div class="success" id="successMessage" style="display: none;"></div>
+        <div class="loading" id="loadingMessage">Loading...</div>
+
+        <button type="submit">Submit</button>
+    </form>
+
+    <script>
+        // Validation Function
+        function validateForm() {
+            let isValid = true;
+            
+            // Clear previous errors
+            document.getElementById('nameError').textContent = '';
+            document.getElementById('emailError').textContent = '';
+            document.getElementById('phoneError').textContent = '';
+            document.getElementById('addressError').textContent = '';
+            document.getElementById('messageError').textContent = '';
+
+            // Name validation (required)
+            const name = document.getElementById('name').value.trim();
+            if (name === '') {
+                document.getElementById('nameError').textContent = 'Name is required.';
+                isValid = false;
+            }
+
+            // Email validation (required and valid format)
+            const email = document.getElementById('email').value.trim();
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (email === '') {
+                document.getElementById('emailError').textContent = 'Email is required.';
+                isValid = false;
+            } else if (!emailRegex.test(email)) {
+                document.getElementById('emailError').textContent = 'Please enter a valid email address.';
+                isValid = false;
+            }
+
+            // Phone validation (optional, but if entered, check basic format)
+            const phone = document.getElementById('phone').value.trim();
+            const phoneRegex = /^\d{10}$/;
+            if (phone !== '' && !phoneRegex.test(phone)) {
+                document.getElementById('phoneError').textContent = 'Please enter a valid 10-digit phone number.';
+                isValid = false;
+            }
+
+            // Message validation (required)
+            const message = document.getElementById('message').value.trim();
+            if (message === '') {
+                document.getElementById('messageError').textContent = 'Message is required.';
+                isValid = false;
+            }
+
+            return isValid;
+        }
+
+        // Submit Form to MongoDB
+        async function submitForm(event) {
+            event.preventDefault();
+
+            // Validate form
+            if (!validateForm()) {
+                return false;
+            }
+
+            // Hide previous messages
+            document.getElementById('successMessage').style.display = 'none';
+            document.getElementById('loadingMessage').style.display = 'block';
+
+            try {
+                const formData = {
+                    name: document.getElementById('name').value.trim(),
+                    email: document.getElementById('email').value.trim(),
+                    phone: document.getElementById('phone').value.trim(),
+                    address: document.getElementById('address').value.trim(),
+                    message: document.getElementById('message').value.trim()
+                };
+
+                // Send data to backend
+                const apiUrl = window.location.protocol === 'file:'
+                    ? 'http://127.0.0.1:3000/api/contact'
+                    : '/api/contact';
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    mode: 'cors',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const result = await response.json();
+
+                document.getElementById('loadingMessage').style.display = 'none';
+
+                if (result.success) {
+                    // Show success message
+                    const successDiv = document.getElementById('successMessage');
+                    successDiv.textContent = '✓ ' + result.message;
+                    successDiv.style.display = 'block';
+
+                    // Reset form
+                    document.getElementById('contactForm').reset();
+
+                    // Hide success message after 5 seconds
+                    setTimeout(() => {
+                        successDiv.style.display = 'none';
+                    }, 5000);
+                } else {
+                    document.getElementById('successMessage').textContent = '✗ ' + result.message;
+                    document.getElementById('successMessage').style.color = '#e74c3c';
+                    document.getElementById('successMessage').style.background = '#fadbd8';
+                    document.getElementById('successMessage').style.borderLeftColor = '#e74c3c';
+                    document.getElementById('successMessage').style.display = 'block';
+                }
+
+            } catch (error) {
+                document.getElementById('loadingMessage').style.display = 'none';
+                document.getElementById('successMessage').textContent = '✗ Error: ' + error.message;
+                document.getElementById('successMessage').style.color = '#e74c3c';
+                document.getElementById('successMessage').style.background = '#fadbd8';
+                document.getElementById('successMessage').style.borderLeftColor = '#e74c3c';
+                document.getElementById('successMessage').style.display = 'block';
+            }
+
+            return false;
+        }
+    </script>
+</body>
+
+</html>

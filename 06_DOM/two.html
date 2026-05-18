@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOM</title>
+</head>
+<body style="background-color: #202020; color: white;">
+   <div class="parent"></div>
+   <div class="day">Monday</div>
+   <div class="day">Tuesday</div>
+   <div class="day">Wednesday</div>
+   <div class="day">Thursday</div> 
+</body>
+<script>
+    const parentDiv = document.querySelector('.parent');
+    // console.log(parentDiv);
+    // console.log(parentDiv.children);
+    // console.log(parentDiv.children[1].innerHTML);
+    
+    // for (let i = 0; i < parentDiv.children.length; i++) {
+        // const element = parentDiv.children[i].innerHTML;
+        // console.log(element);
+    // }
+
+    console.log(parentDiv.firstElementChild);
+    console.log(parentDiv.lastElementChild);    
+    const dayDivs = document.querySelectorAll('.day');
+    // console.log(dayDivs);
+    // console.log(dayDivs[0].parentElement);
+    // console.log(dayDivs[0].nextElementSibling);
+    // console.log(dayDivs[0].previousElementSibling); 
+</script>
+</html>

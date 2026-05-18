@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOM remove and edit</title>
+</head>
+<body style="background-color: #202020; color: white;">
+    <ul class="language">
+        <li>JavaScript</li>
+    </ul>
+</body>
+<script>
+    function addLanguage(langName) {
+        const li = document.createElement('li');
+        li.innerHTML = `<b>${langName}</b>`;
+        document.querySelector('.language').appendChild(li);
+    }
+    addLanguage('Python');
+    addLanguage('C++');
+
+    function addOptiLanguage(langName) {
+        const li = document.createElement('li');
+        li.appendChild(document.createTextNode(langName));
+        document.querySelector('.language').appendChild(li);
+    }
+    addOptiLanguage('Java');
+
+    // edit
+    const js = document.querySelector('li:nth-child(1)');
+    // js.innerText = 'JS';
+
+    const newLi = document.createElement('li');
+    newLi.textContent = 'JS';
+    js.replaceWith(newLi);
+
+    const firstLi = document.querySelector('li:nth-child(1)');
+    firstLi.outerHTML = '<li><i>JS</i></li>';
+
+    // remove
+    const lastLi = document.querySelector('li:last-child');
+    lastLi.remove();
+</script>
+</html>

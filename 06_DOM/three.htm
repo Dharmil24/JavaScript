@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOM node creating</title>
+</head>
+<body style="background-color: #202020; color: white;">
+    
+</body>
+<script>
+    const newDiv = document.createElement('div');
+    newDiv.className = 'new-div';
+    newDiv.id = Math.round(Math.random() * 10 + 1);
+    newDiv.setAttribute('data-info', 'This is a new div element');
+    // newDiv.innerHTML = 'This is a new div created by JavaScript.';
+    const textNode = document.createTextNode('This is a new div created by JavaScript.');
+    newDiv.appendChild(textNode);
+    newDiv.style.backgroundColor = '#333';
+    newDiv.style.padding = '20px';
+    newDiv.style.margin = '20px 0';
+    document.body.appendChild(newDiv);
+</script>
+</html>
